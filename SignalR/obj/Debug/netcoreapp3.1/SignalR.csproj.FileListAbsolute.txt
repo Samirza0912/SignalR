@@ -1,0 +1,6 @@
+C:\Users\ASUS\Desktop\SignalR\SignalR\obj\Debug\netcoreapp3.1\SignalR.csproj.AssemblyReference.cache
+C:\Users\ASUS\Desktop\SignalR\SignalR\obj\Debug\netcoreapp3.1\SignalR.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\ASUS\Desktop\SignalR\SignalR\obj\Debug\netcoreapp3.1\SignalR.AssemblyInfoInputs.cache
+C:\Users\ASUS\Desktop\SignalR\SignalR\obj\Debug\netcoreapp3.1\SignalR.AssemblyInfo.cs
+C:\Users\ASUS\Desktop\SignalR\SignalR\obj\Debug\netcoreapp3.1\SignalR.csproj.CoreCompileInputs.cache
+C:\Users\ASUS\Desktop\SignalR\SignalR\obj\Debug\netcoreapp3.1\SignalR.MvcApplicationPartsAssemblyInfo.cache
