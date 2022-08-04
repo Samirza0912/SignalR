@@ -1,0 +1,71 @@
+﻿@model List<AppUser>
+@{
+    ViewData["Title"] = "Chat";
+}
+
+<div class="container">
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div class="col-2">User</div>
+        <div class="col-4"><input type="text" id="userInput" /></div>
+    </div>
+    <div class="row">
+        <div class="col-2">Message</div>
+        <div class="col-4"><input type="text" id="messageInput" /></div>
+    </div>
+    <div class="row">&nbsp;</div>
+    <div class="row">
+        <div class="col-6">
+            <input type="button" id="sendButton" value="Send Message" />
+        </div>
+    </div>
+</div> 
+<ul class="list-group">
+    @foreach (var item in Model)
+    {
+        <li id="@item.Id" class="list-group-item"><span class="@(item.ConnectionId==null? "offline":"online")" style="display:inline-block; height:15px; width:15px; border-radius:50%; background-color:red;"></span> <a asp-action="PrivateSend" asp-route-id="@item.Id">@item.Fullname</a> </li>
+    }
+</ul>
+<div class="row">
+    <div class="col-12">
+        <hr />
+    </div>
+</div>
+<div class="row">
+    <div class="col-6">
+        <ul id="messagesList">
+        </ul>
+    </div>
+</div>
+
+@section Scripts{
+
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script>
+         var connection = new signalR.HubConnectionBuilder().withUrl("/chat").build();
+         connection.start();
+
+        $("#sendButton").click(function () {
+            let user = $("#userInput").val();
+            let message = $("#messageInput").val();
+            connection.invoke("SendMessage", user, message)
+        });
+         connection.on("ReceiveMessage",function(user,message,date){
+          let li = `<li>${user} ${message} ${date}</li>`
+            $("#messagesList").append(li);
+         });
+        connection.on("UserConnect", function (userId) {
+            $(`#${userId}`.find("span").addClass("online")
+                 $(`#${userId}`.find("span").removeClass("offline")
+        });
+        connection.on("UserDisConnect", function (userId) {
+            $(`#${userId}`.find("span").addClass("offline")
+                 $(`#${userId}`.find("span").removeClass("online")
+        });
+        connection.on("PrivateMessage", function () {
+            alert("samir yekdi")
+        });
+
+
+    </script>
+}

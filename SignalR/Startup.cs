@@ -15,39 +15,27 @@ using SignalR.DAL;
 using SignalR.Models;
 using SignalR.Hubs;
 
-namespace Friello
+namespace SignalR
 {
     public class Startup
     {
-        private readonly IConfiguration _config;
-
-        public Startup(IConfiguration config)
+        public Startup(IConfiguration configuration)
         {
-            _config = config;
+            Configuration = configuration;
         }
 
+        public IConfiguration Configuration { get; }
+
         // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllersWithViews();
             services.AddSignalR();
-            services.AddDbContext<AppDbContext>(option =>
+            services.AddDbContext<AppDbContext>(opt =>
             {
-                option.UseSqlServer(_config.GetConnectionString("DefaultConnection"));
+                opt.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
-            services.AddSession(opt =>
-            {
-                opt.IdleTimeout = TimeSpan.FromMinutes(5);
-            });
-            services.AddIdentity<AppUser, IdentityRole>(opt =>
-            {
-                opt.Password.RequireDigit = true;
-                opt.Password.RequireUppercase = true;
-
-                opt.User.RequireUniqueEmail = true;
-                opt.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(1);
-            }).AddEntityFrameworkStores<AppDbContext>().AddDefaultTokenProviders();
+            services.AddIdentity<AppUser, IdentityRole>().AddDefaultTokenProviders().AddEntityFrameworkStores<AppDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,20 +45,26 @@ namespace Friello
             {
                 app.UseDeveloperExceptionPage();
             }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
+            }
             app.UseHttpsRedirection();
             app.UseStaticFiles();
+
             app.UseRouting();
-            app.UseSession();
             app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
-                    name: "areas",
-                    pattern: "{area:exists}/{controller=dashboard}/{action=Index}/{id?}"
-                    );
-                endpoints.MapDefaultControllerRoute();
+                    name: "default",
+                    pattern: "{controller=Home}/{action=Index}/{id?}");
+
                 endpoints.MapHub<ChatHub>("/chat");
             });
         }

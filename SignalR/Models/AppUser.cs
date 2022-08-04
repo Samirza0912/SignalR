@@ -10,5 +10,6 @@ namespace SignalR.Models
     {
         public string Fullname { get; set; }
         public string ConnectionId { get; set; }
+        public bool isOnline { get; set; }
     }
 }
